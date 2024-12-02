@@ -34,9 +34,7 @@ const checkIfSafe = (report: number[]) => {
 const part1 = () => {
   return input.split('\n').reduce((safeReports, _report) => {
     const report = _report.split(' ').map(Number)
-
-    const isSafe = checkIfSafe(report)
-    return isSafe ? safeReports + 1 : safeReports
+    return checkIfSafe(report) ? safeReports + 1 : safeReports
   }, 0)
 }
 
@@ -44,18 +42,14 @@ const part2 = () => {
   return input.split('\n').reduce((safeReports, _report) => {
     const report = _report.split(' ').map(Number)
 
-    const isSafe = checkIfSafe(report)
-
-    if (isSafe) {
+    if (checkIfSafe(report)) {
       return safeReports + 1
     }
 
-    if (!isSafe) {
-      for (let i = 0; i < report.length; i++) {
-        const spliced = report.toSpliced(i, 1)
-        if (checkIfSafe(spliced)) {
-          return safeReports + 1
-        }
+    for (let i = 0; i < report.length; i++) {
+      const spliced = report.toSpliced(i, 1)
+      if (checkIfSafe(spliced)) {
+        return safeReports + 1
       }
     }
 
