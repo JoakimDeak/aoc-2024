@@ -35,7 +35,7 @@ const part2 = () => {
     const [testValue, numString] = equation.split(': ')
     return [Number(testValue), numString.split(' ').map(Number)] as const
   })
-  const res = equations.reduce((sum, equation, i) => {
+  const res = equations.reduce((sum, equation) => {
     const [testValue, numbers] = equation
 
     const options = Math.pow(3, numbers.length - 1)
