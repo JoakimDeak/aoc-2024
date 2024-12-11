@@ -5,7 +5,7 @@ const blink = (stone: number) => {
     return [1]
   }
   const length = Math.floor(Math.log10(stone) + 1)
-  if (length >= 2 && length % 2 === 0) {
+  if (length % 2 === 0) {
     return [
       Math.floor(stone / Math.pow(10, length / 2)),
       stone % Math.pow(10, length / 2),
@@ -30,13 +30,13 @@ const part1 = () => {
 
 const getNumberOfStones = (
   stone: number,
-  blink = 0,
+  remainingBlinks: number,
   results = new Map<string, number>()
 ): number => {
-  if (blink === 75) {
+  if (remainingBlinks === 0) {
     return 1
   }
-  const memoKey = `${stone},${blink}`
+  const memoKey = `${stone},${remainingBlinks}`
 
   const memoedResult = results.get(memoKey)
   if (memoedResult !== undefined) {
@@ -44,7 +44,7 @@ const getNumberOfStones = (
   }
 
   if (stone === 0) {
-    const result = getNumberOfStones(1, blink + 1, results)
+    const result = getNumberOfStones(1, remainingBlinks - 1, results)
     results.set(memoKey, result)
     return result
   }
@@ -53,14 +53,15 @@ const getNumberOfStones = (
   if (length % 2 === 0) {
     const left = Math.floor(stone / Math.pow(10, length / 2))
     const right = stone % Math.pow(10, length / 2)
+
     const result =
-      getNumberOfStones(left, blink + 1, results) +
-      getNumberOfStones(right, blink + 1, results)
+      getNumberOfStones(left, remainingBlinks - 1, results) +
+      getNumberOfStones(right, remainingBlinks - 1, results)
     results.set(memoKey, result)
     return result
   }
 
-  const result = getNumberOfStones(stone * 2024, blink + 1, results)
+  const result = getNumberOfStones(stone * 2024, remainingBlinks - 1, results)
   results.set(memoKey, result)
   return result
 }
@@ -68,7 +69,7 @@ const getNumberOfStones = (
 const part2 = () => {
   const stones = input.split(' ').map(Number)
   const numberOfStones = stones.reduce(
-    (numberOfStones, stone) => numberOfStones + getNumberOfStones(stone),
+    (numberOfStones, stone) => numberOfStones + getNumberOfStones(stone, 75),
     0
   )
   return numberOfStones
